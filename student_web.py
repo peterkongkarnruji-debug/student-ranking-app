@@ -12,29 +12,19 @@ st.title("📊 โปรแกรมจัดอันดับนักเร�
 if "students" not in st.session_state:
     st.session_state.students = []
 
-# กำหนดค่า default ให้ input
-if "fname" not in st.session_state:
-    st.session_state.fname = ""
-
-if "lname" not in st.session_state:
-    st.session_state.lname = ""
-
-if "score" not in st.session_state:
-    st.session_state.score = 0.0
-
 # -------------------------
 # INPUT
 # -------------------------
 col1, col2, col3, col4 = st.columns([2,2,2,1])
 
 with col1:
-    fname = st.text_input("ชื่อ", key="fname")
+    fname = st.text_input("ชื่อ", key="fname_input")
 
 with col2:
-    lname = st.text_input("นามสกุล", key="lname")
+    lname = st.text_input("นามสกุล", key="lname_input")
 
 with col3:
-    score = st.number_input("คะแนน", min_value=0.0, step=1.0, key="score")
+    score = st.number_input("คะแนน", min_value=0.0, step=1.0, key="score_input")
 
 with col4:
     add_click = st.button("เพิ่มข้อมูล", use_container_width=True)
@@ -50,12 +40,11 @@ if add_click:
             "คะแนน": score
         })
 
-        # 👇 รีเซ็ตช่องกรอกทั้งหมด
-        st.session_state.fname = ""
-        st.session_state.lname = ""
-        st.session_state.score = 0.0
+        # 👇 ลบ key ของ input ออกไปเลย
+        del st.session_state["fname_input"]
+        del st.session_state["lname_input"]
+        del st.session_state["score_input"]
 
-        st.success("เพิ่มข้อมูลแล้ว")
         st.rerun()
     else:
         st.warning("กรุณากรอกชื่อและนามสกุล")
@@ -87,18 +76,12 @@ if st.session_state.students:
             })
             st.rerun()
 
-    # -------------------------
-    # TOP 30
-    # -------------------------
     st.divider()
     st.subheader("🏆 Top 30 คนคะแนนสูงสุด")
 
     top30 = df_sorted.head(30)
     st.dataframe(top30, use_container_width=True)
 
-    # -------------------------
-    # EXPORT
-    # -------------------------
     def to_excel(dataframe):
         output = BytesIO()
         with pd.ExcelWriter(output, engine="openpyxl") as writer:
