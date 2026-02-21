@@ -13,41 +13,32 @@ if "students" not in st.session_state:
     st.session_state.students = []
 
 # -------------------------
-# INPUT
+# FORM INPUT (ล้างอัตโนมัติ)
 # -------------------------
-col1, col2, col3, col4 = st.columns([2,2,2,1])
+with st.form("student_form", clear_on_submit=True):
 
-with col1:
-    fname = st.text_input("ชื่อ", key="fname_input")
+    col1, col2, col3 = st.columns([2,2,2])
 
-with col2:
-    lname = st.text_input("นามสกุล", key="lname_input")
+    with col1:
+        fname = st.text_input("ชื่อ")
 
-with col3:
-    score = st.number_input("คะแนน", min_value=0.0, step=1.0, key="score_input")
+    with col2:
+        lname = st.text_input("นามสกุล")
 
-with col4:
-    add_click = st.button("เพิ่มข้อมูล", use_container_width=True)
+    with col3:
+        score = st.number_input("คะแนน", min_value=0.0, step=1.0)
 
-# -------------------------
-# ADD DATA
-# -------------------------
-if add_click:
-    if fname and lname:
-        st.session_state.students.append({
-            "ชื่อ": fname,
-            "นามสกุล": lname,
-            "คะแนน": score
-        })
+    submitted = st.form_submit_button("เพิ่มข้อมูล", use_container_width=True)
 
-        # 👇 ลบ key ของ input ออกไปเลย
-        del st.session_state["fname_input"]
-        del st.session_state["lname_input"]
-        del st.session_state["score_input"]
-
-        st.rerun()
-    else:
-        st.warning("กรุณากรอกชื่อและนามสกุล")
+    if submitted:
+        if fname and lname:
+            st.session_state.students.append({
+                "ชื่อ": fname,
+                "นามสกุล": lname,
+                "คะแนน": score
+            })
+        else:
+            st.warning("กรุณากรอกชื่อและนามสกุล")
 
 # -------------------------
 # TABLE
