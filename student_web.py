@@ -12,19 +12,23 @@ st.title("📊 โปรแกรมจัดอันดับนักเร�
 if "students" not in st.session_state:
     st.session_state.students = []
 
+if "form_key" not in st.session_state:
+    st.session_state.form_key = 0
+
 # -------------------------
-# INPUT (ใช้ปุ่มเท่านั้น)
+# INPUT
 # -------------------------
 col1, col2, col3, col4 = st.columns([2,2,2,1])
 
 with col1:
-    fname = st.text_input("ชื่อ", key="fname")
+    fname = st.text_input("ชื่อ", key=f"fname_{st.session_state.form_key}")
 
 with col2:
-    lname = st.text_input("นามสกุล", key="lname")
+    lname = st.text_input("นามสกุล", key=f"lname_{st.session_state.form_key}")
 
 with col3:
-    score = st.number_input("คะแนน", min_value=0.0, step=1.0, key="score")
+    score = st.number_input("คะแนน", min_value=0.0, step=1.0,
+                            key=f"score_{st.session_state.form_key}")
 
 with col4:
     if st.button("เพิ่มข้อมูล", use_container_width=True):
@@ -35,10 +39,8 @@ with col4:
                 "คะแนน": score
             })
 
-            # reset ค่า
-            st.session_state.fname = ""
-            st.session_state.lname = ""
-            st.session_state.score = 0.0
+            # 🔥 เปลี่ยน key เพื่อบังคับ reset
+            st.session_state.form_key += 1
 
             st.rerun()
         else:
