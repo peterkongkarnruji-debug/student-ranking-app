@@ -12,24 +12,36 @@ st.title("📊 โปรแกรมจัดอันดับนักเร�
 if "students" not in st.session_state:
     st.session_state.students = []
 
+# กำหนดค่า default ให้ input
+if "fname" not in st.session_state:
+    st.session_state.fname = ""
+
+if "lname" not in st.session_state:
+    st.session_state.lname = ""
+
+if "score" not in st.session_state:
+    st.session_state.score = 0.0
+
 # -------------------------
-# INPUT (ไม่ใช้ form, ไม่ใช้ on_click)
+# INPUT
 # -------------------------
 col1, col2, col3, col4 = st.columns([2,2,2,1])
 
 with col1:
-    fname = st.text_input("ชื่อ")
+    fname = st.text_input("ชื่อ", key="fname")
 
 with col2:
-    lname = st.text_input("นามสกุล")
+    lname = st.text_input("นามสกุล", key="lname")
 
 with col3:
-    score = st.number_input("คะแนน", min_value=0.0, step=1.0)
+    score = st.number_input("คะแนน", min_value=0.0, step=1.0, key="score")
 
 with col4:
     add_click = st.button("เพิ่มข้อมูล", use_container_width=True)
 
-# 👇 เพิ่มข้อมูลเฉพาะตอนกดปุ่มจริง ๆ เท่านั้น
+# -------------------------
+# ADD DATA
+# -------------------------
 if add_click:
     if fname and lname:
         st.session_state.students.append({
@@ -37,6 +49,12 @@ if add_click:
             "นามสกุล": lname,
             "คะแนน": score
         })
+
+        # 👇 รีเซ็ตช่องกรอกทั้งหมด
+        st.session_state.fname = ""
+        st.session_state.lname = ""
+        st.session_state.score = 0.0
+
         st.success("เพิ่มข้อมูลแล้ว")
         st.rerun()
     else:
