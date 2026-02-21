@@ -13,30 +13,34 @@ if "students" not in st.session_state:
     st.session_state.students = []
 
 # -------------------------
-# FORM INPUT (ล้างอัตโนมัติ)
+# INPUT (ใช้ปุ่มเท่านั้น)
 # -------------------------
-with st.form("student_form", clear_on_submit=True):
+col1, col2, col3, col4 = st.columns([2,2,2,1])
 
-    col1, col2, col3 = st.columns([2,2,2])
+with col1:
+    fname = st.text_input("ชื่อ", key="fname")
 
-    with col1:
-        fname = st.text_input("ชื่อ")
+with col2:
+    lname = st.text_input("นามสกุล", key="lname")
 
-    with col2:
-        lname = st.text_input("นามสกุล")
+with col3:
+    score = st.number_input("คะแนน", min_value=0.0, step=1.0, key="score")
 
-    with col3:
-        score = st.number_input("คะแนน", min_value=0.0, step=1.0)
-
-    submitted = st.form_submit_button("เพิ่มข้อมูล", use_container_width=True)
-
-    if submitted:
+with col4:
+    if st.button("เพิ่มข้อมูล", use_container_width=True):
         if fname and lname:
             st.session_state.students.append({
                 "ชื่อ": fname,
                 "นามสกุล": lname,
                 "คะแนน": score
             })
+
+            # reset ค่า
+            st.session_state.fname = ""
+            st.session_state.lname = ""
+            st.session_state.score = 0.0
+
+            st.rerun()
         else:
             st.warning("กรุณากรอกชื่อและนามสกุล")
 
@@ -60,11 +64,7 @@ if st.session_state.students:
         c4.write(row["คะแนน"])
 
         if c5.button("🗑️", key=f"del_{index}"):
-            st.session_state.students.remove({
-                "ชื่อ": row["ชื่อ"],
-                "นามสกุล": row["นามสกุล"],
-                "คะแนน": row["คะแนน"]
-            })
+            st.session_state.students.pop(index)
             st.rerun()
 
     st.divider()
